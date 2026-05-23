@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyd
 .pytest_cache/
 
 # Virtual environments
@@ -12,17 +13,17 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
-# Data files
-# The raw Kaggle dataset is too large for this repo.
-data/raw/*.csv
-data/processed/*.csv
+# Data files - not uploaded because the Kaggle CSV is large
+/data/raw/*.csv
+/data/processed/*.csv
 
-# Outputs
-outputs/*.csv
-outputs/*.png
-outputs/*.html
+# Model and analysis outputs
+/outputs/*.csv
+/outputs/*.png
+/outputs/*.html
+/outputs/*.joblib
 
-# Local/system files
+# Local files
 .DS_Store
 Thumbs.db
 .env

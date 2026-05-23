@@ -1,38 +1,34 @@
-"""Optional text analysis helpers for song titles.
+"""Text analysis helpers for song titles.
 
-This part was included in the original coursework, but the main public workflow
-focuses more on data preparation and modelling.
+This file keeps the title and sentiment analysis separate from the main
+modelling workflow.
 """
 
-import re
 from collections import Counter
+import re
 
 import pandas as pd
 
-BASIC_STOPWORDS = {
-    "the",
-    "a",
-    "an",
-    "and",
-    "of",
-    "to",
-    "in",
-    "with",
+CUSTOM_STOPWORDS = {
     "feat",
-    "featuring",
     "remix",
     "version",
+    "with",
+    "the",
+    "and",
+    "for",
+    "from",
 }
 
 
 def clean_title(title: str) -> list[str]:
-    """Tokenise a song title and remove simple stopwords."""
+    """Split a song title into cleaned lowercase words."""
     if pd.isna(title):
         return []
 
-    title = str(title).lower()
-    title = re.sub(r"[^a-zA-Z0-9\s]", " ", title)
-    words = [word for word in title.split() if word not in BASIC_STOPWORDS]
+    words = re.findall(r"[A-Za-z]+", str(title).lower())
+    words = [word for word in words if word not in CUSTOM_STOPWORDS and len(word) > 1]
+
     return words
 
 
@@ -43,4 +39,5 @@ def most_common_title_words(data: pd.DataFrame, top_n: int = 20) -> pd.DataFrame
     for title in data["name"].dropna().unique():
         counter.update(clean_title(title))
 
-    return pd.DataFrame(counter.most_common(top_n), columns=["word", "count"])
+    common_words = counter.most_common(top_n)
+    return pd.DataFrame(common_words, columns=["word", "count"])

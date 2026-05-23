@@ -1,37 +1,34 @@
 # Project summary
 
-## Aim
+This project explores what makes songs successful on Spotify using global Top 50 chart data from more than 70 countries.
 
-The aim of this project was to explore what makes songs popular on Spotify using global Top 50 chart data and audio features. The project looked at title patterns, seasonal and regional audio trends, regression modelling for popularity, and classification modelling for long-term chart presence.
+The work includes data preparation, feature analysis, text and sentiment analysis, regression modelling, and classification modelling. The original university version was later adapted into a cleaner GitHub portfolio project.
+
+## Main question
+
+What makes a song popular on Spotify?
 
 ## Dataset
 
-The project uses the Kaggle dataset **Top Spotify Songs in 73 Countries**. The dataset contains daily Spotify chart entries and audio features for songs appearing in Top 50 playlists across many countries.
+The project uses a Kaggle dataset containing daily Spotify Top 50 chart entries across many countries. The original coursework used a snapshot downloaded in November 2024.
 
-The dataset is not included in the repository because it is large and updated over time. Users should download it directly from Kaggle and place it in the `data/raw/` folder.
+## Approach
 
-## Main methods
+The raw daily data is converted into a monthly song-level dataset. This reduces repeated daily chart rows and makes the data easier to use for modelling.
 
-The raw daily data was cleaned and aggregated into a monthly song-level dataset. This reduced repeated daily chart entries and created clearer modelling features such as average monthly popularity, best monthly rank, worst monthly rank and chart days.
+The project then compares several regression models to explain average monthly song popularity. It also trains a classification model to predict whether a song is likely to stay in the charts for more than two months.
 
-Regression models were used to predict average monthly popularity. A classification model was used to predict whether a song stayed in the charts for more than two months.
+## Original findings
 
-The GitHub version improves the original coursework by using a song-level split where needed. This helps avoid testing on the same song that the model has already seen during training.
+The original analysis suggested that audio features alone cannot fully explain Spotify popularity. Random Forest gave the strongest regression performance in the original model comparison, but many external factors are missing from the dataset, such as artist popularity, genre, marketing, playlist placement and social media trends.
 
-## Main findings from the original coursework
-
-The original analysis found that Random Forest performed best among the tested regression models. However, audio features alone could only explain part of song popularity, suggesting that external factors such as artist popularity, genre, marketing and social media trends are important.
-
-The original classification model achieved around 90% accuracy for predicting long-term chart presence. The public GitHub version keeps this task but uses a more careful validation approach.
-
-Seasonal patterns were also found, with more energetic and positive-sounding songs becoming more common during summer months.
-
-## Limitations
-
-The project only uses songs that already reached Spotify Top 50 charts. This means the results should not be treated as a general prediction model for all new songs.
-
-The dataset also lacks important external variables such as artist popularity, playlist placement, genre, marketing budget and social media activity.
+The original classification model reached around 90% accuracy, but the GitHub version uses a more careful song-level validation approach to reduce over-optimistic results.
 
 ## Personal contribution
 
-I worked across the project, especially on data preparation, feature analysis, modelling, interpretation and preparing the final project structure. I had lighter involvement in the text analysis section compared with the modelling and data preparation parts.
+I contributed across the project, especially to data preparation, feature analysis, modelling, interpretation of results and adapting the work into a public GitHub portfolio project. I had lighter involvement in the text analysis section compared with the modelling and data preparation work.
+
+
+## Visual outputs
+
+Selected plots from the original notebook are included in `images/key_charts/`. They include word clouds, sentiment plots, geographic audio-feature maps, monthly trend plots, model comparison charts and classification model outputs.

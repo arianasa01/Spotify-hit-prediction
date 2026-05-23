@@ -1,8 +1,8 @@
 """Data preparation for the Spotify Hit Prediction project.
 
 This script converts the raw daily Spotify chart data into a monthly
-modelling dataset. The raw CSV is not included in the repository because
-the file is large.
+modelling dataset. The raw CSV is not included in the repository because the
+file is large.
 """
 
 from pathlib import Path
@@ -95,9 +95,8 @@ def create_monthly_dataset(
 ) -> pd.DataFrame:
     """Create a monthly song-level dataset for modelling.
 
-    The raw dataset contains one row per song per daily chart entry.
-    This function aggregates the data so each row represents one song
-    in one month.
+    The raw dataset contains one row per song per daily chart entry. This
+    function aggregates the data so each row represents one song in one month.
     """
     validate_columns(data)
 

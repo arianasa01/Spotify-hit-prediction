@@ -1,6 +1,6 @@
-# Data folder
+# Data
 
-The raw dataset is not included in this repository because the file is too large.
+The raw dataset is not included in this repository because it is too large.
 
 Download the dataset from Kaggle:
 
@@ -12,7 +12,7 @@ Place the downloaded CSV file here:
 data/raw/universal_top_spotify_songs.csv
 ```
 
-When you run the project, the processed monthly dataset will be created automatically here:
+After running the project, the processed monthly dataset will be created here:
 
 ```text
 data/processed/spotify_monthly_2024.csv

@@ -1,13 +1,12 @@
 """Modelling code for the Spotify Hit Prediction project.
 
 The workflow includes:
-1. Regression models for average monthly popularity.
-2. A classification model for long-term chart presence.
+1. Regression models for average monthly popularity
+2. A classification model for long-term chart presence
 """
 
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 from scipy.stats import randint, uniform
 from sklearn.compose import ColumnTransformer
@@ -82,11 +81,7 @@ def create_preprocessor() -> ColumnTransformer:
 
 
 def grouped_train_test_split(data: pd.DataFrame, test_size: float = 0.2):
-    """Split the data while keeping the same song out of both train and test sets.
-
-    This is safer than a normal random row split because the same song can appear
-    in multiple monthly rows.
-    """
+    """Split data while keeping the same song out of both train and test sets."""
     splitter = GroupShuffleSplit(n_splits=1, test_size=test_size, random_state=42)
     train_idx, test_idx = next(splitter.split(data, groups=data["spotify_id"]))
 
@@ -116,7 +111,11 @@ def compare_regression_models(data: pd.DataFrame) -> pd.DataFrame:
         "Support Vector Regressor": SVR(),
         "Stochastic Gradient Descent": SGDRegressor(random_state=42),
         "Gradient Boosting": GradientBoostingRegressor(random_state=42),
-        "Random Forest": RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1),
+        "Random Forest": RandomForestRegressor(
+            n_estimators=200,
+            random_state=42,
+            n_jobs=-1,
+        ),
         "Dummy Mean": DummyRegressor(strategy="mean"),
         "Dummy Median": DummyRegressor(strategy="median"),
     }
@@ -130,10 +129,11 @@ def compare_regression_models(data: pd.DataFrame) -> pd.DataFrame:
                 ("model", model),
             ]
         )
+
         pipeline.fit(X_train, y_train)
         predictions = pipeline.predict(X_test)
 
-        rmse = np.sqrt(mean_squared_error(y_test, predictions))
+        rmse = mean_squared_error(y_test, predictions, squared=False)
         mae = mean_absolute_error(y_test, predictions)
         r2 = r2_score(y_test, predictions)
 
@@ -151,7 +151,7 @@ def compare_regression_models(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def create_song_level_dataset(data: pd.DataFrame) -> pd.DataFrame:
-    """Convert monthly rows into one row per song for the long-term hit classifier."""
+    """Convert monthly rows into one row per song for the classifier."""
     song_months = data.groupby("spotify_id")["year_month"].nunique().rename("months_in_chart")
 
     first_values = (
@@ -242,6 +242,7 @@ def train_long_term_classifier(data: pd.DataFrame):
     )
 
     search.fit(X_train, y_train)
+
     best_model = search.best_estimator_
     predictions = best_model.predict(X_test)
 

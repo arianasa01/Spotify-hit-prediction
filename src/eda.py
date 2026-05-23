@@ -1,4 +1,4 @@
-"""Exploratory analysis helpers for the Spotify project."""
+"""Exploratory data analysis helpers for the Spotify project."""
 
 from pathlib import Path
 
@@ -10,7 +10,7 @@ OUTPUT_DIR = Path("outputs")
 
 
 def plot_popularity_by_month(data: pd.DataFrame) -> None:
-    """Save a boxplot of average popularity by month."""
+    """Create a boxplot of average popularity by month."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     plt.figure(figsize=(10, 6))
@@ -23,27 +23,14 @@ def plot_popularity_by_month(data: pd.DataFrame) -> None:
     plt.close()
 
 
-def plot_audio_feature_correlation(data: pd.DataFrame) -> None:
-    """Save a correlation heatmap for audio features and popularity."""
+def plot_correlation_heatmap(data: pd.DataFrame, features: list[str]) -> None:
+    """Create a correlation heatmap for selected numeric features."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    features = [
-        "danceability",
-        "energy",
-        "loudness",
-        "speechiness",
-        "acousticness",
-        "instrumentalness",
-        "liveness",
-        "valence",
-        "tempo",
-        "avg_popularity",
-    ]
-
-    correlation = data[features].corr()
+    correlation_matrix = data[features].corr()
 
     plt.figure(figsize=(10, 8))
-    sns.heatmap(correlation, annot=True, fmt=".2f", cmap="coolwarm", center=0)
+    sns.heatmap(correlation_matrix, annot=True, fmt=".2f", cmap="coolwarm", center=0)
     plt.tight_layout()
-    plt.savefig(OUTPUT_DIR / "audio_feature_correlation.png", dpi=150)
+    plt.savefig(OUTPUT_DIR / "correlation_heatmap.png", dpi=150)
     plt.close()

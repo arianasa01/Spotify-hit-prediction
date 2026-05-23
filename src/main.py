@@ -11,7 +11,11 @@ import sys
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.append(str(PROJECT_ROOT))
 
-from src.data_preparation import PROCESSED_DATA_PATH, RAW_DATA_PATH, build_processed_dataset  # noqa: E402
+from src.data_preparation import (  # noqa: E402
+    PROCESSED_DATA_PATH,
+    RAW_DATA_PATH,
+    build_processed_dataset,
+)
 from src.modelling import run_all_models  # noqa: E402
 
 

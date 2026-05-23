@@ -62,13 +62,16 @@ spotify-hit-prediction/
 │   └── project_summary.md
 │
 ├── notebooks/
+│   ├── 01_portfolio_walkthrough.ipynb
 │   └── README.md
 │
-├── outputs/
-│   └── generated model results and charts
+├── images/
+│   ├── README.md
+│   └── key_charts/
+│       └── selected visual outputs from the original notebook
 │
-└── images/
-    └── optional images for README/report
+└── outputs/
+    └── model results and charts created after running the code
 ```
 
 ## How to run the project
@@ -124,6 +127,25 @@ This will:
 - run a song-level classification model for long-term chart presence
 - save results in the `outputs/` folder
 
+
+## Visual examples
+
+The repository includes selected visual outputs from the original notebook in `images/key_charts/`. These are included because the full raw dataset is too large to store in GitHub.
+
+### Feature correlation
+
+![Correlation between features and popularity](images/key_charts/correlation_features_popularity.png)
+
+### Monthly popularity distribution
+
+![Popularity distribution by month](images/key_charts/popularity_distribution_by_month.png)
+
+### Classification model analysis
+
+![Classification model analysis](images/key_charts/classification_model_analysis.png)
+
+More visual outputs, including word clouds, country maps and model comparison charts, are available in the `images/key_charts/` folder.
+
 ## Methods
 
 ### Data preparation
@@ -136,6 +158,7 @@ The processed dataset includes:
 - maximum and minimum monthly popularity
 - average monthly rank
 - best and worst monthly rank
+- chart days per month
 - audio features
 - song duration in minutes
 - explicit content flag
