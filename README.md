@@ -1,2 +1,18 @@
-# Spotify-hit-prediction
-Predicting long-term vs short-term Spotify hits using global Top 50 data across 73 countries with machine learning and feature engineering.
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Data files
+data/raw/*.csv
+data/processed/*.csv
+
+# Outputs
+outputs/*.csv
+outputs/*.png
+outputs/*.html
+
+# Local files
+.DS_Store
+Thumbs.db
+.env
