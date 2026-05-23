@@ -46,9 +46,9 @@ spotify-hit-prediction/
 │
 ├── data/
 │   ├── raw/
-│   │   └── universal_top_spotify_songs.csv   # not included
+│   │   └── universal_top_spotify_songs.csv      # not included
 │   ├── processed/
-│   │   └── spotify_monthly_2024.csv          # created after running the code
+│   │   └── spotify_monthly_2024.csv             # created after running the code
 │   └── README.md
 │
 ├── src/
@@ -89,7 +89,7 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 
-On Mac/Linux:
+On Mac or Linux:
 
 ```bash
 python3 -m venv .venv
@@ -118,7 +118,7 @@ python src/main.py
 
 This will:
 
-- check the raw dataset file
+- check that the raw dataset exists
 - create a cleaned monthly modelling dataset
 - run regression models for average popularity
 - run a song-level classification model for long-term chart presence
@@ -128,12 +128,7 @@ This will:
 
 ### Data preparation
 
-The raw dataset contains daily chart entries. Since the same song can appear in the chart for many days, the project aggregates the data by:
-
-- `spotify_id`
-- month
-
-This creates one row per song per month, rather than one row per daily chart entry.
+The raw dataset contains daily chart entries. Since the same song can appear in the chart for many days, the project aggregates the data by `spotify_id` and month. This creates one row per song per month, rather than one row per daily chart entry.
 
 The processed dataset includes:
 

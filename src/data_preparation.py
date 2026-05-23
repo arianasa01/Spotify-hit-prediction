@@ -1,18 +1,16 @@
-"""
-Data preparation for the Spotify Hit Prediction project.
+"""Data preparation for the Spotify Hit Prediction project.
 
-This script converts the raw daily Spotify chart data into a monthly modelling dataset.
-The raw CSV is not included in the repository because the file is large.
+This script converts the raw daily Spotify chart data into a monthly
+modelling dataset. The raw CSV is not included in the repository because
+the file is large.
 """
 
 from pathlib import Path
 
 import pandas as pd
 
-
 RAW_DATA_PATH = Path("data/raw/universal_top_spotify_songs.csv")
 PROCESSED_DATA_PATH = Path("data/processed/spotify_monthly_2024.csv")
-
 
 REQUIRED_COLUMNS = [
     "spotify_id",
@@ -36,7 +34,6 @@ REQUIRED_COLUMNS = [
     "valence",
     "tempo",
 ]
-
 
 AUDIO_FEATURES = [
     "danceability",
@@ -96,11 +93,11 @@ def create_monthly_dataset(
     start_date: str = "2024-01-01",
     end_date: str = "2024-06-30",
 ) -> pd.DataFrame:
-    """
-    Create a monthly song-level dataset for modelling.
+    """Create a monthly song-level dataset for modelling.
 
     The raw dataset contains one row per song per daily chart entry.
-    This function aggregates the data so each row represents one song in one month.
+    This function aggregates the data so each row represents one song
+    in one month.
     """
     validate_columns(data)
 
@@ -110,8 +107,8 @@ def create_monthly_dataset(
 
     start = pd.to_datetime(start_date)
     end = pd.to_datetime(end_date)
-
     data = data[(data["snapshot_date"] >= start) & (data["snapshot_date"] <= end)].copy()
+
     data["year_month"] = data["snapshot_date"].dt.to_period("M").astype(str)
 
     monthly_metrics = (
@@ -146,7 +143,6 @@ def create_monthly_dataset(
     monthly_data = monthly_metrics.merge(static_features, on="spotify_id", how="left")
     monthly_data["duration_min"] = monthly_data["duration_ms"] / (1000 * 60)
     monthly_data = monthly_data.drop(columns=["duration_ms"])
-
     monthly_data["is_explicit"] = monthly_data["is_explicit"].astype(int)
 
     return monthly_data

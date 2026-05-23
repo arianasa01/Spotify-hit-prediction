@@ -1,9 +1,19 @@
-.venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
 .ipynb_checkpoints/
 
 # Data files
+# The raw Kaggle dataset is too large for this repo.
 data/raw/*.csv
 data/processed/*.csv
 
@@ -12,7 +22,7 @@ outputs/*.csv
 outputs/*.png
 outputs/*.html
 
-# Local files
+# Local/system files
 .DS_Store
 Thumbs.db
 .env

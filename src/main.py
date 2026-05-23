@@ -1,9 +1,8 @@
-"""
-Main project runner.
+"""Main project runner.
 
 Run this file from the root of the repository:
 
-python src/main.py
+    python src/main.py
 """
 
 from pathlib import Path

@@ -1,29 +1,38 @@
-"""
-Modelling code for the Spotify Hit Prediction project.
+"""Modelling code for the Spotify Hit Prediction project.
 
 The workflow includes:
-1. Regression models for average monthly popularity
-2. A classification model for long-term chart presence
+1. Regression models for average monthly popularity.
+2. A classification model for long-term chart presence.
 """
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
-
 from scipy.stats import randint, uniform
-
 from sklearn.compose import ColumnTransformer
 from sklearn.dummy import DummyRegressor
-from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor, RandomForestRegressor
+from sklearn.ensemble import (
+    GradientBoostingClassifier,
+    GradientBoostingRegressor,
+    RandomForestRegressor,
+)
 from sklearn.linear_model import LinearRegression, SGDRegressor
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score, mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    f1_score,
+    mean_absolute_error,
+    mean_squared_error,
+    r2_score,
+)
 from sklearn.model_selection import GroupShuffleSplit, RandomizedSearchCV, train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
-
 
 PROCESSED_DATA_PATH = Path("data/processed/spotify_monthly_2024.csv")
 OUTPUT_DIR = Path("outputs")
@@ -55,9 +64,7 @@ CATEGORICAL_FEATURES = [
 def load_processed_data(path: Path = PROCESSED_DATA_PATH) -> pd.DataFrame:
     """Load the processed monthly dataset."""
     if not path.exists():
-        raise FileNotFoundError(
-            f"Processed file not found: {path}. Run data_preparation.py first."
-        )
+        raise FileNotFoundError(f"Processed file not found: {path}. Run data_preparation.py first.")
 
     return pd.read_csv(path)
 
@@ -70,12 +77,12 @@ def create_preprocessor() -> ColumnTransformer:
             ("categorical", OneHotEncoder(handle_unknown="ignore"), CATEGORICAL_FEATURES),
         ]
     )
+
     return preprocessor
 
 
 def grouped_train_test_split(data: pd.DataFrame, test_size: float = 0.2):
-    """
-    Split the data while keeping the same song out of both train and test sets.
+    """Split the data while keeping the same song out of both train and test sets.
 
     This is safer than a normal random row split because the same song can appear
     in multiple monthly rows.
@@ -95,15 +102,12 @@ def compare_regression_models(data: pd.DataFrame) -> pd.DataFrame:
     target = "avg_popularity"
 
     model_data = data.dropna(subset=features + [target, "spotify_id"]).copy()
-
     train_data, test_data = grouped_train_test_split(model_data)
 
     X_train = train_data[features]
     y_train = train_data[target]
     X_test = test_data[features]
     y_test = test_data[target]
-
-    preprocessor = create_preprocessor()
 
     models = {
         "Linear Regression": LinearRegression(),
@@ -122,15 +126,14 @@ def compare_regression_models(data: pd.DataFrame) -> pd.DataFrame:
     for model_name, model in models.items():
         pipeline = Pipeline(
             steps=[
-                ("preprocessor", preprocessor),
+                ("preprocessor", create_preprocessor()),
                 ("model", model),
             ]
         )
-
         pipeline.fit(X_train, y_train)
         predictions = pipeline.predict(X_test)
 
-        rmse = mean_squared_error(y_test, predictions, squared=False)
+        rmse = np.sqrt(mean_squared_error(y_test, predictions))
         mae = mean_absolute_error(y_test, predictions)
         r2 = r2_score(y_test, predictions)
 
@@ -148,11 +151,7 @@ def compare_regression_models(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def create_song_level_dataset(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Convert monthly rows into one row per song for the long-term hit classifier.
-
-    This avoids training and testing on different rows of the same song.
-    """
+    """Convert monthly rows into one row per song for the long-term hit classifier."""
     song_months = data.groupby("spotify_id")["year_month"].nunique().rename("months_in_chart")
 
     first_values = (
@@ -171,7 +170,6 @@ def create_song_level_dataset(data: pd.DataFrame) -> pd.DataFrame:
 def engineer_classification_features(data: pd.DataFrame) -> pd.DataFrame:
     """Create interaction features for the classification model."""
     model_data = data.copy()
-
     model_data["energy_loudness"] = model_data["energy"] * model_data["loudness"]
     model_data["dance_energy"] = model_data["danceability"] * model_data["energy"]
     model_data["acoust_instru"] = model_data["acousticness"] * model_data["instrumentalness"]
@@ -202,7 +200,6 @@ def train_long_term_classifier(data: pd.DataFrame):
     ]
 
     target = "long_term_hit"
-
     model_data = song_data.dropna(subset=feature_columns + [target]).copy()
 
     X = model_data[feature_columns]
@@ -245,7 +242,6 @@ def train_long_term_classifier(data: pd.DataFrame):
     )
 
     search.fit(X_train, y_train)
-
     best_model = search.best_estimator_
     predictions = best_model.predict(X_test)
 
@@ -275,7 +271,8 @@ def run_all_models(data: pd.DataFrame, output_dir: Path = OUTPUT_DIR) -> None:
     regression_results = compare_regression_models(data)
     regression_results.to_csv(output_dir / "regression_results.csv", index=False)
 
-    best_model, class_report, confusion, summary = train_long_term_classifier(data)
+    _, class_report, confusion, summary = train_long_term_classifier(data)
+
     class_report.to_csv(output_dir / "classification_report.csv")
     confusion.to_csv(output_dir / "confusion_matrix.csv")
 
